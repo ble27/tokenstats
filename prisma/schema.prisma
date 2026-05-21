@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TokenLog {
+  id             String   @id @default(uuid())
+  provider       String
+  model          String
+  inputTokens    Int
+  outputTokens   Int
+  totalCost      Float
+  timestamp      DateTime @default(now())
+
+  @@index([provider, model])
+  @@index([timestamp])
+}

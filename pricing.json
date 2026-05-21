@@ -1,0 +1,10 @@
+{
+  "openai": {
+    "gpt-4o":       { "input": 0.005,  "output": 0.015 },
+    "gpt-4o-mini":  { "input": 0.00015,"output": 0.0006 }
+  },
+  "perplexity": {
+    "sonar-pro":    { "input": 0.003,  "output": 0.015 },
+    "sonar":        { "input": 0.001,  "output": 0.001 }
+  }
+}
