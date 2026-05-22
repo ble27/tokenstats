@@ -1,7 +1,18 @@
 {
   "openai": {
     "gpt-4o":       { "input": 0.005,  "output": 0.015 },
-    "gpt-4o-mini":  { "input": 0.00015,"output": 0.0006 }
+    "gpt-4o-mini":  { "input": 0.00015,"output": 0.0006 },
+    "llama-3.1-8b-instant": { "input": 0.00, "output": 0.00 },
+    "meta-llama/llama-4-scout-17b-16e-instruct": { "input": 0.00, "output": 0.00 },
+    "meta-llama/llama-prompt-guard-2-22m": { "input": 0.00, "output": 0.00 },
+    "meta-llama/llama-prompt-guard-2-86m": { "input": 0.00, "output": 0.00 },
+    "openai/gpt-oss-120b": { "input": 0.00, "output": 0.00 },
+    "openai/gpt-oss-20b": { "input": 0.00, "output": 0.00 },
+    "openai/gpt-oss-safeguard-20b": { "input": 0.00, "output": 0.00 },
+    "qwen/qwen3-32b": { "input": 0.00, "output": 0.00 },
+    "groq/compound": { "input": 0.00, "output": 0.00 },
+    "groq/compound-mini": { "input": 0.00, "output": 0.00 }
+     
   },
   "perplexity": {
     "sonar-pro":    { "input": 0.003,  "output": 0.015 },

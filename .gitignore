@@ -4,3 +4,11 @@ node_modules/
 dist/
 coverage/
 .DS_Store
+AGENTS.md
+Plan.md
+frontend/node_modules/
+.vscode/
+.DS_Store
+dev.db
+prisma/migrations/migration_lock.toml
+prisma/migrations/20260521174046_init/migration.sql

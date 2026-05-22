@@ -20,7 +20,7 @@ const chatSchema = z.object({
 });
 
 router.post('/', async (req, res) => {
-    // Validate with Zod — return 400 on failure
+    // Validate with Zod base model — return 400 on failure
     const result = chatSchema.safeParse(req.body);
     if (!result.success) {
         return res.status(400).json({

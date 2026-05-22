@@ -11,15 +11,26 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
+// Allow all origins for local testing, and allow headers
+app.use(cors({ origin: '*' })); 
+
+app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        return res.status(204).end();
+    }
+    next();
+});
+
+app.use(express.json());
 app.use(limiter);
 app.use(verifyProxyToken);
-app.use(express.json());
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
 app.use('/v1/chat', chatRouter);
 app.use('/v1/analytics', analyticsRouter);
+
 app.use((err, req, res, next) => {
     console.error('[global error]', err);
     res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => console.log(`[server] Running on port ${PORT}`));
+// Explicitly bind to 0.0.0.0 (all IPv4)
+app.listen(PORT, '0.0.0.0', () => console.log(`[server] Running on port ${PORT}`));

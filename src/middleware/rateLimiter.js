@@ -1,4 +1,5 @@
 import rateLimit from 'express-rate-limit';
+import { readFileSync } from 'node:fs';
 
 export const limiter = rateLimit({
     // 60 secs
