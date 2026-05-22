@@ -36,39 +36,40 @@ router.post('/', async (req, res) => {
     try {
         switch (provider) {
             case 'openai':
-                llmresponse = await callOpenAI(model, messages);
+                llmresponse = await callOpenAI(messages, model);
                 break;
             case 'perplexity':
-                llmresponse = await callPerplexity(model, messages);
+                llmresponse = await callPerplexity(messages, model);
                 break;
         }
     } catch (err) {
+        console.error("[LLM API Error]:", err.message || err); 
         return res.status(500).json({
             success: false,
             error: 'Internal server error',
+            details: err.message
         })
     }
 
-    const { inputTokens, outputTokens } = llmresponse;
-    const totalCost = calculateCost(provider, model, inputTokens, outputTokens);
-
-    // Write to DB — failures must NOT crash the response
+    const { usage } = llmresponse;
+    const { promptTokens, completionTokens } = usage;
+    const totalCost = calculateCost(provider, model, promptTokens, completionTokens);
+    // Log the analytics for each query's input and output tokens 
     try {
         await prisma.tokenLog.create({
             data: {
                 provider: provider,
                 model: model,
-                inputTokens: inputTokens,
-                outputTokens: outputTokens,
+                inputTokens: promptTokens,
+                outputTokens: completionTokens,
                 totalCost: totalCost,
-                timestamp: new Date(),
             }
         })
     } catch (err) {
         console.log(err)
     }
     // Return response to client
-    res.json({ content: llmresponse.text });
+    res.json({ content: llmresponse.content });
 });
 
 export default router;
