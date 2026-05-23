@@ -80,16 +80,28 @@ const LandingPage = () => {
   );
 
   return (
-    <main className="relative w-full overflow-hidden">
-      <div className="grid-bg">
-        {[...Array(10)].map((_, i) => (
-          <div key={i} className="falling-dots" />
+    <main className="relative w-full">
+      <div className="grid-bg" />
+      
+      {/* Falling dots with randomized motion */}
+      <div className="falling-dots-container">
+        {[...Array(25)].map((_, i) => (
+          <div 
+            key={i} 
+            className="falling-dot"
+            style={{
+              '--fall-duration': `${6 + Math.random() * 4}s`,
+              '--fall-delay': `${Math.random() * 2}s`,
+              '--horizontal-offset': `${Math.random() * 100}%`,
+            }}
+          />
         ))}
       </div>
+      
       <div className="pointer-events-none absolute -top-48 right-[-220px] h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(79,70,229,0.22),transparent_68%)] blur-3xl opacity-80" />
       <div className="pointer-events-none absolute bottom-[-220px] left-[-220px] h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(6,182,212,0.18),transparent_70%)] blur-3xl opacity-80" />
 
-      <div className="sticky top-0 z-50 border-b border-black/10 bg-[color:var(--bg)]/75 px-4 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg)]/60">
+      <div className="sticky top-0 z-50 border-b border-black/10 bg-[color:var(--bg)] px-4 shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3">
           <a className="focus-ring -ml-2 rounded-lg px-2 py-1" href="#">
             <Logo className="text-[15px] sm:text-base" />
@@ -329,7 +341,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <footer className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-black/10 pt-8 text-sm text-[color:var(--muted-2)] sm:flex-row">
+          <footer className="mt-8 mb-0 flex flex-col items-center justify-between gap-3 border-t border-black/10 pt-6 text-sm text-[color:var(--muted-2)] sm:flex-row">
             <span>© {new Date().getFullYear()} Token Stats</span>
             <div className="flex items-center gap-4">
               <a className="focus-ring rounded-full px-2 py-1 hover:text-[color:var(--text)]" href="#features">

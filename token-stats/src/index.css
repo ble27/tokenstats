@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Z-index utilities */
+@layer utilities {
+  .z-5 {
+    z-index: 5;
+  }
+}
+
 :root {
   color-scheme: light;
 
@@ -37,6 +44,12 @@ body,
   color: var(--text);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: Figtree, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
     "Segoe UI Emoji";
@@ -45,6 +58,7 @@ body {
     linear-gradient(180deg, #fbfaf7 0%, #f4f3ef 60%, #fbfaf7 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -92,18 +106,24 @@ a {
 }
 
 @keyframes fallingDots {
-  0% {
-    transform: translateY(-100px);
-    opacity: 0;
+  from {
+    background-position: 0 -240px, 10px -180px;
   }
-  10% {
+  to {
+    background-position: 0 240px, 10px 300px;
+  }
+}
+
+@keyframes randomFall {
+  0% {
+    transform: translateY(-100px) translateX(0);
+    opacity: 0.5;
+  }
+  50% {
     opacity: 0.4;
   }
-  90% {
-    opacity: 0.3;
-  }
   100% {
-    transform: translateY(100vh);
+    transform: translateY(100vh) translateX(calc(sin(var(--seed)) * 40px));
     opacity: 0;
   }
 }
@@ -135,31 +155,26 @@ a {
       rgba(251, 250, 247, 1) 100%);
 }
 
-/* Falling dot patterns */
-.grid-bg {
-  position: relative;
-}
-
-.falling-dots {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: radial-gradient(circle, rgba(79, 70, 229, 0.5), rgba(79, 70, 229, 0.1));
-  border-radius: 50%;
+/* Falling dot pattern overlay */
+.falling-dots-container {
   pointer-events: none;
-  animation: fallingDots 8s linear infinite;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
 }
 
-.falling-dots:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 10s; }
-.falling-dots:nth-child(2) { left: 15%; animation-delay: 1s; animation-duration: 11s; }
-.falling-dots:nth-child(3) { left: 25%; animation-delay: 2s; animation-duration: 12s; }
-.falling-dots:nth-child(4) { left: 35%; animation-delay: 0.5s; animation-duration: 9s; }
-.falling-dots:nth-child(5) { left: 50%; animation-delay: 1.5s; animation-duration: 13s; }
-.falling-dots:nth-child(6) { left: 65%; animation-delay: 0s; animation-duration: 14s; }
-.falling-dots:nth-child(7) { left: 75%; animation-delay: 2.5s; animation-duration: 10s; }
-.falling-dots:nth-child(8) { left: 85%; animation-delay: 1.2s; animation-duration: 12s; }
-.falling-dots:nth-child(9) { left: 20%; animation-delay: 3s; animation-duration: 11s; }
-.falling-dots:nth-child(10) { left: 60%; animation-delay: 0.3s; animation-duration: 13s; }
+.falling-dot {
+  position: absolute;
+  width: var(--dot-size, 1.5px);
+  height: var(--dot-size, 1.5px);
+  background: radial-gradient(circle, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.1));
+  border-radius: 50%;
+  left: var(--horizontal-offset, 50%);
+  top: -20px;
+  box-shadow: 0 0 4px rgba(15, 23, 42, 0.15);
+  animation: randomFall var(--fall-duration, 8s) linear var(--fall-delay, 0s) infinite;
+}
 
 .glass-card {
   background: var(--surface);
