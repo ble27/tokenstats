@@ -81,7 +81,11 @@ const LandingPage = () => {
 
   return (
     <main className="relative w-full overflow-hidden">
-      <div className="grid-bg" />
+      <div className="grid-bg">
+        {[...Array(10)].map((_, i) => (
+          <div key={i} className="falling-dots" />
+        ))}
+      </div>
       <div className="pointer-events-none absolute -top-48 right-[-220px] h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(79,70,229,0.22),transparent_68%)] blur-3xl opacity-80" />
       <div className="pointer-events-none absolute bottom-[-220px] left-[-220px] h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(6,182,212,0.18),transparent_70%)] blur-3xl opacity-80" />
 
