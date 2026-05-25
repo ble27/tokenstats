@@ -1,14 +1,38 @@
+# Dependencies
 node_modules/
+frontend/
+
+# Environment & secrets (never commit real keys)
 .env
-.prisma/
+.env.local
+.env.*.local
+token-stats/.env.local
+frontend/.env
+frontend/.env.local
+
+# Build output
 dist/
 coverage/
+
+# Database (local dev)
+dev.db
+.prisma/
+
+# OS
 .DS_Store
+
+# IDE & AI assistant tooling
+.vscode/
+.cursor/
+.claude/
+*.code-workspace
+
+# Debug session logs
+.cursor/debug-*.log
+
+# Local agent docs (not for repo)
 AGENTS.md
 Plan.md
+
+# Legacy frontend deps path
 frontend/node_modules/
-.vscode/
-.DS_Store
-dev.db
-prisma/migrations/migration_lock.toml
-prisma/migrations/20260521174046_init/migration.sql

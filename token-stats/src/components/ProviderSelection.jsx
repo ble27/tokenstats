@@ -1,12 +1,6 @@
-import { useState } from 'react';
-
-const ProviderSelection = ({ providers, onSelectProvider }) => {
-  const [selectedProvider, setSelectedProvider] = useState('');
-
+const ProviderSelection = ({ providers, value, onSelectProvider }) => {
   const handleProviderChange = (e) => {
-    const provider = e.target.value;
-    setSelectedProvider(provider);
-    onSelectProvider(provider);
+    onSelectProvider(e.target.value);
   };
 
   return (
@@ -19,7 +13,7 @@ const ProviderSelection = ({ providers, onSelectProvider }) => {
       </label>
       <select
         id="provider"
-        value={selectedProvider}
+        value={value || ''}
         onChange={handleProviderChange}
         className="w-full rounded-2xl border border-[color:var(--border)] bg-white/80 px-4 py-3 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-4 focus:ring-[color:var(--ring)]"
       >

@@ -1,33 +1,13 @@
 import OpenAI from 'openai';
 
-const OPENAI_BASE = 'https://api.openai.com/v1';
-
-function getEnvClient() {
-  const apiKey =
-    process.env.OPENAI_API_KEY ||
-    process.env.OPENAI_ADMIN_KEY ||
-    process.env.GROQ_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('Missing credentials. Set OPENAI_API_KEY.');
-  }
-
-  return new OpenAI({ apiKey, baseURL: OPENAI_BASE });
-}
+const GROQ_BASE = 'https://api.groq.com/openai/v1';
 
 function estimateTokens(text) {
   return Math.ceil(text.length / 4);
 }
 
-function createClient(apiKey) {
-  if (apiKey) {
-    return new OpenAI({ apiKey: apiKey.trim(), baseURL: OPENAI_BASE });
-  }
-  return getEnvClient();
-}
-
-export async function callOpenAI(messages, model, apiKey) {
-  const client = createClient(apiKey);
+export async function callGroq(messages, model, apiKey) {
+  const client = new OpenAI({ apiKey: apiKey.trim(), baseURL: GROQ_BASE });
   const response = await client.chat.completions.create({ model, messages });
   const content = response.choices[0]?.message?.content ?? '';
 

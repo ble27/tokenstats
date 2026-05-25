@@ -1,68 +1,79 @@
 # TokenStats
 
-TokenStats is a React application that provides a landing page for users to manage their API keys and select different providers. The application utilizes Auth0 or OAuth for user authentication and is styled using Tailwind CSS.
+TokenStats is a React dashboard for signing in with Google, running LLM prompts through the token tracker proxy, and reviewing usage analytics.
 
 ## Features
 
-- User authentication via Auth0 or OAuth
-- Provider selection for different API services
-- Input field for users to paste their API keys
-- Responsive design with Tailwind CSS
+- Google OAuth sign-in (popup flow)
+- Dashboard shell with **Workspace** and **Analytics** tabs
+- Per-prompt provider API keys (OpenAI/Groq `sk-…`, Perplexity `pplx-…`) verified on every run
+- App-level proxy auth via `VITE_PROXY_TOKEN` (matches server `PROXY_AUTH_TOKEN`)
+- Dark Supabase/Neon-inspired layout with unified `--bg` surfaces
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (version 14 or higher)
-- npm (Node Package Manager)
+- Node.js 18+
+- npm
+- Root API server (`node server.js` from repo root) with database configured
 
 ### Installation
 
-1. Clone the repository:
-
-   ```
-   git clone <repository-url>
-   ```
-
-2. Navigate to the project directory:
-
-   ```
-   cd token-stats
-   ```
-
-3. Install the dependencies:
-
-   ```
-   npm install
-   ```
-
-### Configuration
-
-1. Set up your Auth0 or OAuth credentials and update the necessary environment variables in your `.env` file.
-
-2. If you are using Tailwind CSS, ensure that your `tailwind.config.js` is properly configured to include the paths to your template files.
-
-### Running the Application
-
-To start the development server, run:
-
+```bash
+cd token-stats
+npm install
+cp .env.example .env.local
 ```
+
+Configure `.env.local`:
+
+| Variable | Purpose |
+|----------|---------|
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Web client ID |
+| `VITE_API_BASE` | Proxy base URL (default `http://127.0.0.1:3001`) |
+| `VITE_PROXY_TOKEN` | Bearer token for app gate — must match `PROXY_AUTH_TOKEN` on the server |
+
+Provider API keys are **not** set in env files. Enter them in the Workspace toolbar; they are kept in session storage (optional convenience) and sent only with each `POST /v1/chat` request. The server verifies keys before calling the provider and does not persist them.
+
+### Google OAuth setup
+
+1. Create an OAuth 2.0 **Web application** client in [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
+2. Add **Authorized JavaScript origins**: `http://localhost:3000` (Vite dev) and your production origin.
+3. Optional redirect URIs for code flow: `http://localhost:3000/auth/google/callback`.
+
+### Running
+
+```bash
+# Terminal 1 — API (repo root)
+node server.js
+
+# Terminal 2 — UI
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`.
+Open `http://localhost:3000`. After sign-in you land on `/workspace`.
 
-### Usage
+## Routes
 
-- Navigate to the landing page.
-- Click the login button to authenticate.
-- Select a provider from the dropdown menu.
-- Paste your API key in the provided input field.
+| Path | Tab |
+|------|-----|
+| `/workspace` | Workspace (prompt editor + results) |
+| `/workspace/analytics` | Analytics (usage summary + table) |
 
-## Contributing
+## Run flow
 
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+1. Choose provider and model, paste your provider API key, write a prompt.
+2. Click **Run** — the proxy validates `Authorization: Bearer <VITE_PROXY_TOKEN>`, verifies the provider key, then calls the LLM with that key.
+3. Invalid keys return `401` with a verification message before any completion is charged.
+4. Successful runs are logged server-side; refresh **Analytics** to see updated totals.
+
+## Build
+
+```bash
+npm run build
+```
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+MIT — see LICENSE in the repository root.
