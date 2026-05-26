@@ -10,6 +10,7 @@ import analyticsRouter from './routes/analytics.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.set('trust proxy', 1); // Trust X-Forwarded-For from reverse proxies (Fly.io, Vercel, etc.)
 app.use(helmet());
 // Use strict CORS in production, allow frontend only
 const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : ['http://localhost:3000', 'http://127.0.0.1:3000'];
