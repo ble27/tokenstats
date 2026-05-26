@@ -1,14 +1,17 @@
 # Dependencies
 node_modules/
-frontend/
 
 # Environment & secrets (never commit real keys)
 .env
 .env.local
 .env.*.local
-token-stats/.env.local
-frontend/.env
-frontend/.env.local
+src/frontend/.env.local 
+src/frontend/.env
+
+# Instructions and agent config
+.agents/
+.github/
+.cursor/
 
 # Build output
 dist/

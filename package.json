@@ -1,5 +1,15 @@
 {
   "type": "module",
+  "scripts": {
+    "dev:backend": "node src/backend/server.js",
+    "dev:frontend": "npm run dev --prefix src/frontend",
+    "build:frontend": "npm run build --prefix src/frontend",
+    "db:migrate": "npx prisma migrate deploy",
+    "db:studio": "npx prisma studio",
+    "test": "vitest run",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  },
   "dependencies": {
     "@prisma/client": "^6.19.3",
     "cors": "^2.8.6",
@@ -10,5 +20,9 @@
     "openai": "^6.38.0",
     "prisma": "^6.19.3",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.7"
   }
 }
