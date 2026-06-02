@@ -1,7 +1,9 @@
-# Token Tracker API (Express + Prisma + SQLite)
-FROM node:20-alpine
+# Debian slim — @libsql native bindings fail on Alpine (musl: fcntl64)
+FROM node:20-bookworm-slim
 
-RUN apk add --no-cache openssl
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

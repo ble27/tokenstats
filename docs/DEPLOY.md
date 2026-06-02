@@ -43,6 +43,8 @@ npm run db:verify
 
 ## 3. Deploy backend (example: Render)
 
+**Docker / Turso:** Use the repo `Dockerfile` (`node:20-bookworm-slim`). Do not use `node:alpine` — libSQL native modules fail on musl (`fcntl64: symbol not found`).
+
 1. New **Web Service** → connect GitHub repo.
 2. **Root directory:** repository root.
 3. **Build command:** `npm install && npx prisma generate`
