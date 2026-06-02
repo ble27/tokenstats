@@ -1,7 +1,7 @@
 // src/routes/chat.js
 import { Router } from 'express';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma.js';
 import { callOpenAI } from '../adapters/openaiAdapter.js';
 import { callGroq } from '../adapters/groqAdapter.js';
 import { callAnthropic } from '../adapters/anthropicAdapter.js';
@@ -11,7 +11,6 @@ import { calculateCost } from '../utils/calculateCost.js';
 import { verifyProviderKey } from '../utils/verifyProviderKey.js';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 const chatSchema = z.object({
   provider: z.enum(['openai', 'groq', 'anthropic', 'gemini', 'perplexity']),

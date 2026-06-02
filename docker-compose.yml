@@ -7,7 +7,10 @@ services:
       - "3001:3001"
     environment:
       PROXY_AUTH_TOKEN: ${PROXY_AUTH_TOKEN:?PROXY_AUTH_TOKEN must be set}
-      DATABASE_URL: "file:./prisma/dev.db"
+      DATABASE_URL: ${DATABASE_URL:-file:./dev.db}
+      TURSO_DATABASE_URL: ${TURSO_DATABASE_URL:-}
+      TURSO_AUTH_TOKEN: ${TURSO_AUTH_TOKEN:-}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       PORT: 3001
       # Optional server-side provider keys (not required if users paste keys in the UI)
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}

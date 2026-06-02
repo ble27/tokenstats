@@ -31,7 +31,7 @@ Browser (React)
       Express API (src/backend)
         ├─ verifyProxyToken middleware
         ├─ POST /v1/chat  → provider adapter → LLM vendor API
-        │                    └─► Prisma → SQLite (token logs)
+        │                    └─► Prisma → SQLite file (local) or Turso (production)
         └─ GET/DELETE /v1/analytics → aggregated logs
 ```
 
@@ -61,7 +61,7 @@ token_tracker/
 ├── pricing.json              # Model pricing + IDs (frontend + backend)
 ├── package.json              # Backend dependencies + npm scripts
 ├── prisma/
-│   ├── schema.prisma         # TokenLog model (SQLite)
+│   ├── schema.prisma         # TokenLog model (SQLite / Turso libSQL)
 │   └── migrations/           # Database migrations
 └── src/
     ├── frontend/             # React + Vite app
@@ -134,11 +134,12 @@ token_tracker/
         │   ├── anthropicAdapter.js
         │   ├── geminiAdapter.js
         │   └── perplexityAdapter.js
-        ├── utils/
-        │   ├── calculateCost.js    # Reads pricing.json
-        │   └── verifyProviderKey.js # Format/live check per provider
-        └── lib/
-            └── geminiConstants.js   # Gemini free vs paid tier model sets
+        ├── lib/
+        │   ├── prisma.js            # Prisma client (file SQLite or Turso adapter)
+        │   └── geminiConstants.js   # Gemini free vs paid tier model sets
+        └── utils/
+            ├── calculateCost.js    # Reads pricing.json
+            └── verifyProviderKey.js # Format/live check per provider
 ```
 
 ---
@@ -176,8 +177,10 @@ Set at minimum:
 
 ```env
 PROXY_AUTH_TOKEN=your_long_random_secret
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="file:./dev.db"
 ```
+
+**Production (Turso):** set `TURSO_DATABASE_URL` + `TURSO_AUTH_TOKEN` (keep `DATABASE_URL` as `file:./dev.db`). Run `npm run db:migrate:turso`. See **[docs/DEPLOY.md](docs/DEPLOY.md)**.
 
 **Frontend** — copy and edit:
 
@@ -199,6 +202,7 @@ VITE_PROXY_TOKEN=your_long_random_secret
 
 ```bash
 npm run db:migrate
+npm run db:verify   # optional: create/delete test row
 ```
 
 ### 4. Start both processes
@@ -266,8 +270,10 @@ SQLite data persists in the `sqlite_data` Docker volume.
 | `npm run dev:backend` | Start Express API |
 | `npm run dev:frontend` | Start Vite dev server |
 | `npm run build:frontend` | Production build → `src/frontend/dist` |
-| `npm run db:migrate` | Apply Prisma migrations |
-| `npm run db:studio` | Open Prisma Studio (inspect SQLite) |
+| `npm run db:migrate` | Apply migrations (local `file:` DB only) |
+| `npm run db:migrate:turso` | Apply migrations to Turso |
+| `npm run db:verify` | Smoke-test DB read/write |
+| `npm run db:studio` | Open Prisma Studio (inspect DB) |
 | `npm run docker:up` | `docker compose up --build` |
 | `npm run docker:down` | `docker compose down` |
 
@@ -286,6 +292,14 @@ Authorization: Bearer <PROXY_AUTH_TOKEN>
 | `POST` | `/v1/chat` | Run a prompt (`provider`, `model`, `messages`, `apiKey`) |
 | `GET` | `/v1/analytics?range=1d\|1w\|1m\|all` | Aggregated usage |
 | `DELETE` | `/v1/analytics?range=...` | Delete logs in range |
+
+---
+
+## Production deploy
+
+**Vercel** (frontend) + **Turso** (database) + **Node host** (API: Render, Railway, Fly without volume, etc.)
+
+Step-by-step: **[docs/DEPLOY.md](docs/DEPLOY.md)** · Env reference: **[docs/ENV.md](docs/ENV.md)**
 
 ---
 

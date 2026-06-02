@@ -19,6 +19,8 @@ coverage/
 
 # Database (local dev)
 dev.db
+prisma/dev.db
+prisma/*.db-journal
 .prisma/
 
 # OS
